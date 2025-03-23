@@ -17,12 +17,19 @@ public class ElPriceService {
 	@Value("${elering.api.url}")
 	private String apiUrl;
 	
-	@Autowired
-	private DateService dateService;
+	private final DateService dateService;
 	
-	@Autowired
-	private PriceEnrichmentService priceEnrichmentService;
-	
+	private final PriceEnrichmentService priceEnrichmentService;
+
+	private final CacheService cacheService;
+
+	public ElPriceService(DateService dateService, PriceEnrichmentService priceEnrichmentService, CacheService cacheService)
+	{
+		this.dateService = dateService;
+		this.priceEnrichmentService = priceEnrichmentService;
+		this.cacheService = cacheService;
+	}
+
 	public List<PriceEntry> getTodayPrices() {
 		ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
 		ZonedDateTime start = dateService.getStartOfDay(now);

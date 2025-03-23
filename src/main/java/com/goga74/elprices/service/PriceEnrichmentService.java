@@ -1,6 +1,7 @@
 package com.goga74.elprices.service;
 
 import com.goga74.elprices.dto.PriceEntry;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -13,38 +14,47 @@ import java.util.stream.Collectors;
 
 @Service
 public class PriceEnrichmentService {
-	
+
 	private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-	
+	public static final String DEFAULT_TIMEZONE = "Europe/Tallinn";
+
+	@Value("${my.timezone:Europe/Tallinn}")
+	private String timezone;
+
 	public List<PriceEntry> enrichPrices(List<PriceEntry> prices, boolean highlightCurrentInterval) {
+		if (prices == null) {
+			PriceEntry emptyEntry = new PriceEntry();
+			emptyEntry.setTimestamp("0");
+			emptyEntry.setPrice(0.0);
+			return List.of(emptyEntry);
+		}
+
 		double minPrice = prices.stream()
+				.filter(price -> price != null)
 				.mapToDouble(PriceEntry::getPrice)
 				.min()
 				.orElse(Double.MAX_VALUE);
-		
-		LocalTime currentHour = highlightCurrentInterval ? LocalTime.now() : null;
-		
+
+		LocalTime currentHour = highlightCurrentInterval ? LocalTime.now(getTimeZone()) : null;
+
 		return prices.stream()
+				.filter(price -> price != null)
 				.map(price -> {
 					try {
-						// Преобразуем Unix timestamp в LocalDateTime
 						long unixTimestamp = Long.parseLong(price.getTimestamp());
 						LocalDateTime dateTime = Instant.ofEpochSecond(unixTimestamp)
-								.atZone(ZoneId.systemDefault())
+								.atZone(getTimeZone()) // Используем часовой пояс
 								.toLocalDateTime();
-						
-						// Устанавливаем интервал времени
-						LocalTime time = dateTime.toLocalTime();
-						price.setInterval(time.format(TIME_FORMATTER) + " - " + time.plusHours(1).format(TIME_FORMATTER));
 
-						double formattedPrice = price.getPrice();
-						price.setPrice(formattedPrice);
-						
-						// Устанавливаем флаги для минимальной цены и текущего интервала
+						LocalTime time = dateTime.toLocalTime();
+						price.setInterval(time.format(TIME_FORMATTER) + " - " +
+								time.plusHours(1).format(TIME_FORMATTER));
+
 						price.setMinPrice(price.getPrice() == minPrice);
-						price.setCurrentInterval(highlightCurrentInterval && currentHour.getHour() == time.getHour());
+						price.setCurrentInterval(highlightCurrentInterval &&
+								currentHour != null &&
+								currentHour.getHour() == time.getHour());
 					} catch (NumberFormatException e) {
-						// Логируем ошибку и устанавливаем значения по умолчанию
 						System.err.println("Invalid timestamp format: " + price.getTimestamp());
 						price.setInterval("Unknown");
 						price.setMinPrice(false);
@@ -53,5 +63,14 @@ public class PriceEnrichmentService {
 					return price;
 				})
 				.collect(Collectors.toList());
+	}
+
+	public ZoneId getTimeZone() {
+		try {
+			return ZoneId.of(timezone != null ? timezone : DEFAULT_TIMEZONE);
+		} catch (Exception e) {
+			System.err.println("Invalid timezone configuration: " + timezone);
+			return ZoneId.of(DEFAULT_TIMEZONE);
+		}
 	}
 }
