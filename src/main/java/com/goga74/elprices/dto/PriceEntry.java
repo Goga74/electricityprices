@@ -13,27 +13,31 @@ public class PriceEntry {
 		return timestamp;
 	}
 	
-	public void setTimestamp(String timestamp) {
+	public PriceEntry setTimestamp(String timestamp)
+	{
 		this.timestamp = timestamp;
+		return this;
 	}
 	
 	public Double getPrice() {
 		return price;
 	}
 	
-	public void setPrice(Double price)
+	public PriceEntry setPrice(Double price)
 	{
 		this.price = price;
 		// Форматируем цену и сохраняем её в sPrice
 		this.sPrice = String.format("%.2f", price);
+		return this;
 	}
 	
 	public String getInterval() {
 		return interval;
 	}
 	
-	public void setInterval(String interval) {
+	public PriceEntry setInterval(String interval) {
 		this.interval = interval;
+		return this;
 	}
 	
 	public boolean isMinPrice() {
