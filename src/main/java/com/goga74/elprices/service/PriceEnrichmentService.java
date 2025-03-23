@@ -46,6 +46,7 @@ public class PriceEnrichmentService {
 								.atZone(getTimeZone()) // Используем часовой пояс
 								.toLocalDateTime();
 
+						// ToDO: use time converter to get hours!
 						LocalTime time = dateTime.toLocalTime();
 						price.setInterval(time.format(TIME_FORMATTER) + " - " +
 								time.plusHours(1).format(TIME_FORMATTER));

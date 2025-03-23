@@ -1,5 +1,7 @@
 package com.goga74.elprices.dto;
 
+import java.util.Locale;
+
 public class PriceEntry {
 	private String timestamp;
 	private Double price;
@@ -8,7 +10,6 @@ public class PriceEntry {
 	private boolean isMinPrice; // Флаг минимальной цены
 	private boolean isCurrentInterval; // Флаг текущего интервала
 	
-	// Геттеры и сеттеры
 	public String getTimestamp() {
 		return timestamp;
 	}
@@ -27,7 +28,7 @@ public class PriceEntry {
 	{
 		this.price = price;
 		// Форматируем цену и сохраняем её в sPrice
-		this.sPrice = String.format("%.2f", price);
+		this.sPrice = String.format(Locale.US, "%.2f", price);
 		return this;
 	}
 	
@@ -56,8 +57,7 @@ public class PriceEntry {
 		isCurrentInterval = currentInterval;
 	}
 
-	// Метод для Thymeleaf (или другого HTML-шаблонизатора)
 	public String getPriceAsString() {
-		return sPrice != null ? sPrice : String.format("%.2f", price);
+		return sPrice;
 	}
 }
