@@ -22,7 +22,6 @@ public class JsonPriceController {
     public ResponseEntity<List<PriceEntry>> getTodayPricesAsJson() {
         List<PriceEntry> todayPrices = elPriceService.getTodayPrices();
 
-        // Устанавливаем HTTP-заголовок Content-Type для JSON
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
 
@@ -35,7 +34,6 @@ public class JsonPriceController {
     public ResponseEntity<List<PriceEntry>> getTomorrowPricesAsJson() {
         List<PriceEntry> tomorrowPrices = elPriceService.getTomorrowPrices();
 
-        // Устанавливаем HTTP-заголовок Content-Type для JSON
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
 

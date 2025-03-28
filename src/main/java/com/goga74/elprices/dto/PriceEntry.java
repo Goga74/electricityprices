@@ -1,14 +1,20 @@
 package com.goga74.elprices.dto;
 
 import java.util.Locale;
+import com.google.gson.annotations.Expose;
 
-public class PriceEntry {
+public class PriceEntry
+{
+	@Expose
 	private String timestamp;
+	@Expose
 	private Double price;
 	private String sPrice;
 	private String interval; // Интервал времени (например, "01:00 - 02:00")
 	private boolean isMinPrice; // Флаг минимальной цены
 	private boolean isCurrentInterval; // Флаг текущего интервала
+
+	// ToDo: add hour in number format
 	
 	public String getTimestamp() {
 		return timestamp;
