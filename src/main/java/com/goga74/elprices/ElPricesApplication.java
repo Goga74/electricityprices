@@ -2,12 +2,18 @@ package com.goga74.elprices;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @SpringBootApplication
-//@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-public class ElPricesApplication {
-	public static void main(String[] args) {
+public class ElPricesApplication
+{
+	private static final Logger logger = LogManager.getLogger(ElPricesApplication.class);
+
+	public static void main(String[] args)
+	{
+		logger.info("Запуск приложения ElPrices...");
 		SpringApplication.run(ElPricesApplication.class, args);
+		logger.info("Приложение ElPrices успешно запущено.");
 	}
 }

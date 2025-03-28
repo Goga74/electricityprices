@@ -9,6 +9,8 @@ import com.goga74.elprices.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -20,6 +22,8 @@ import java.util.Optional;
 @Service
 public class ElPriceService
 {
+	private static final Logger logger = LogManager.getLogger(ElPriceService.class);
+
 	@Value("${elering.api.url}")
 	private String apiUrl;
 	
@@ -78,11 +82,11 @@ public class ElPriceService
 				String jsonData = JsonUtil.convertToJson(enrichedPrices);
 				priceDataService.savePriceData(today, jsonData);
 			}
-
 			return enrichedPrices;
 		}
 		else
 		{
+			logger.error("Failed to fetch data from API");
 			throw new RuntimeException("Failed to fetch data from API");
 		}
 	}
@@ -117,6 +121,7 @@ public class ElPriceService
 		}
 		else
 		{
+			logger.error("Failed to fetch data from API");
 			throw new RuntimeException("Failed to fetch data from API");
 		}
 	}
