@@ -9,6 +9,8 @@ public class PriceEntry {
 	private String interval; // Интервал времени (например, "01:00 - 02:00")
 	private boolean isMinPrice; // Флаг минимальной цены
 	private boolean isCurrentInterval; // Флаг текущего интервала
+
+	// ToDo: add hour in number format
 	
 	public String getTimestamp() {
 		return timestamp;
