@@ -15,7 +15,7 @@ EXPOSE 80
 
 # Устанавливаем активный профиль для Docker
 #ENV SPRING_PROFILES_ACTIVE=docker
-ENV SPRING_PROFILES_ACTIVE=docker-aws
+ENV SPRING_PROFILES_ACTIVE=docker-do
 
 # Команда для запуска приложения
 #CMD ["java", "-jar", "app.jar"]
